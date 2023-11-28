@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTMX Chat Golang Sandbox</title>
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.5"></script>
+  <!-- HTMX Web Socket Support-->
+  <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
+  <script src="https://unpkg.com/hyperscript.org@0.9.11"></script>
+</head>
+<body _="on htmx:wsOpen(event) log event set document.getElementById('status').innerHTML to 'Connected' end">
+  <div
+    hx-ext="ws" ws-connect="/wsChat"
+  >
+    <form id="form" name="chat_form" ws-send>
+      <input id="message" name="message" type="text" />
+      <button type="submit">Send</button>
+    </form>
+    <div id="status"></div>
+    <pre id="output"></pre>
+  </div>
+</body>
+</html>
