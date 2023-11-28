@@ -1,0 +1,14 @@
+tasks:
+  - name: build-taskrunner
+    commands:
+      - go build -o dist/taskrunner
+  - name: test
+    commands:
+      - go test ./...
+  - name: echo
+    commands:
+      - echo "{ARGS}"
+  - name: init
+    commands:
+      - go run cmd/init/main.go
+    args:
