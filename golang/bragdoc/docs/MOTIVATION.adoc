@@ -1,0 +1,20 @@
+= Motivation
+
+Typically, during our quarterly - yearly performance reviews, I find it more of
+a challenge to recall the specific tasks or achievements I've had, especially
+actions that weren't tied to a `git` commit. By easing the friction of tracking
+these actions, `BragDoc` should provide an easy way to provide a timeline and
+references for
+
+- Performance Reviews
+- Resume Content
+- Linked In Content
+
+In the future, AI can be used to generate this content for you.
+
+
+== Technical Goals
+
+Learn more about:
+
+- `golang`

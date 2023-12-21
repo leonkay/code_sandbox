@@ -1,0 +1,8 @@
+= Description
+
+`BragDoc` is a utility for tracking both your day-to-day and career spanning
+achievements.
+
+Currently, a WIP command line utility, the eventual goal is to provide hooks that can
+tie into a person's daily workflow to ease friction as much as possible when
+tracking these changes.

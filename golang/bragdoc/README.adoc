@@ -1,0 +1,9 @@
+= Readme
+Leon Kay <leokay@gmail.com>
+
+
+
+include::docs/DESCRIPTION.adoc[leveloffset=+1]
+include::docs/CLI.adoc[leveloffset=+1]
+include::docs/MOTIVATION.adoc[leveloffset=+1]
+include::docs/ROADMAP.adoc[leveloffset=+1]

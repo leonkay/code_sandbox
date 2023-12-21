@@ -1,0 +1,9 @@
+= Roadmap
+
+1. CLI tools
+2. Simple Web Interface, Locally Hosted
+  a. Readonly Provide a Timeline, Graph of Actions, filterable by tracker type
+  b. Add Write behavior to Web
+3. Content Generation using AI
+  a. Simple generation for Summaries
+  b. Targeted generation for specific types of documentats

@@ -45,8 +45,11 @@ func (c *Context) Init() {
 
 	company := initCompany(c.Request, c.Brag, c.Handler)
   if company == nil {
-    log.Fatalln("Could not determine company")
-    return
+    if c.Request.TrackerKey != "company" {
+      log.Fatalln("Could not determine company")
+      return
+    }
+
   }
   title := initTitle(c.Request, c.Brag, company, c.Handler)
 	c.Process = &model.ProcessContext{
