@@ -1,0 +1,54 @@
+-- name: initialize-actions
+CREATE TABLE IF NOT EXISTS 'B_TRACKER_TYPE' (
+  'tracker_type_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+  'display_tier' INTEGER DEFAULT '0',
+  'context_eligible' BOOLEAN DEFAULT 'FALSE',
+  'activity_key' TEXT NOT NULL UNIQUE
+);
+CREATE TABLE IF NOT EXISTS 'B_TRACKER_REL' (
+  'parent_id' INTEGER NOT NULL,
+  'child_id' INTEGER NOT NULL,
+  FOREIGN KEY('parent_id') references 'b_tracker_type(tracker_type_id)'
+  FOREIGN KEY('child_id') references 'b_tracker_type(tracker_type_id)'
+);
+CREATE TABLE IF NOT EXISTS 'B_ACTIVITY_EVENT' (
+  'activity_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+  'time' TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  'tracker_type_id' INTEGER,
+  'action_id' INTEGER /* action enum */,
+  'title' TEXT,
+  FOREIGN KEY('tracker_type_id') references 'b_tracker_type(tracker_type_id)'
+);
+CREATE TABLE IF NOT EXISTS 'B_ACTIVITY_EVENT_EXT' (
+  'activity_ext_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+  'activity_id' INTEGER,
+  'description' TEXT,
+  FOREIGN KEY('activity_id') references 'B_ACTIVITY_EVENT(activity_id)'
+);
+CREATE TABLE IF NOT EXISTS 'B_COMPANY' (
+  'company_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+  'company_name' TEXT NOT NULL,
+  'create_date' TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS 'B_TITLE' (
+  'title_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+  'company_id' INTEGER NOT NULL,
+  'title' TEXT NOT NULL,
+  'level' TEXT,
+  'create_date' TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  FOREIGN KEY('company_id') references 'B_COMPANY(company_id)'
+);
+CREATE TABLE IF NOT EXISTS 'B_SALARY' (
+  'salary_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+  'title_id' INTEGER NOT NULL,
+  'salary' INTEGER,
+  'create_date' TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  FOREIGN KEY('title_id') references 'B_TITLE(title_id)'
+);
+CREATE TABLE IF NOT EXISTS 'B_PERFORMANCE_REVIEW' (
+  'performance_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+  'review_time' TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  'title_id' INTEGER NOT NULL,
+  'review_text' TEXT NOT NULL,
+  FOREIGN KEY('title_id') references 'B_TITLE(title_id)'
+);
