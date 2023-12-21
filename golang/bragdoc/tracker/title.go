@@ -8,58 +8,45 @@ import (
 type TitleTrackerHandler struct {
 }
 
-func (c TitleTrackerHandler) New(action model.Action, trackerType model.TrackerType, args []string) *ActionHandler {
-	if action == model.Join {
-		return &ActionHandler{
-			Action:       action,
-			SqlFile:      "sql/title.sql",
-			StatementKey: "insert:title",
-			CliArgs:      args,
-			ChangeDb:     true,
-			ContextUpdate: func(recordId int, con *context.Context) {
-				con.Brag.TitleId = recordId
-				con.UpdateFile()
-			},
-			ArgsGenerator: func(args []string, con *context.Context) []any {
-				rtn := []any{con.Process.Company.Id}
-				for _, x := range args {
-					rtn = append(rtn, x)
-				}
-				return rtn
-			},
-		}
-	} else if action == model.Add {
-		return &ActionHandler{
-			Action:       action,
-			SqlFile:      "sql/title.sql",
-			StatementKey: "insert:title",
-			CliArgs:      args,
-			ChangeDb:     true,
-			ArgsGenerator: func(args []string, con *context.Context) []any {
-				rtn := []any{con.Process.Company.Id}
-				for _, x := range args {
-					rtn = append(rtn, x)
-				}
-				return rtn
+func (c TitleTrackerHandler) New(action model.Action, trackerType model.TrackerType, args []string) []ActionTask {
+	if action == model.Set {
+		return []ActionTask{
+			UpdateActionHandler{
+				Action:       action,
+				SqlFile:      "sql/title.sql",
+				StatementKey: "insert:title",
+				CliArgs:      args,
+				ContextUpdate: func(recordId int, con *context.Context) {
+					con.Brag.TitleId = recordId
+					con.UpdateFile()
+				},
+				ArgsGenerator: func(args []string, con *context.Context) []any {
+					rtn := []any{con.Process.Company.Id}
+					for _, x := range args {
+						rtn = append(rtn, x)
+					}
+					return rtn
+				},
 			},
 		}
 	} else if action == model.Switch {
-		return &ActionHandler{
-			Action:       action,
-			SqlFile:      "sql/search.sql",
-			StatementKey: "title:byname:selectid",
-			CliArgs:      args,
-			ChangeDb:     false,
-			ContextUpdate: func(recordId int, con *context.Context) {
-				con.Brag.TitleId = recordId
-				con.UpdateFile()
-			},
-			ArgsGenerator: func(args []string, con *context.Context) []any {
-				rtn := []any{con.Process.Company.Id}
-				for _, x := range args {
-					rtn = append(rtn, x)
-				}
-				return rtn
+		return []ActionTask{
+			QueryActionHandler{
+				Action:       action,
+				SqlFile:      "sql/search.sql",
+				StatementKey: "title:byname:selectid",
+				CliArgs:      args,
+				ContextUpdate: func(recordId int, con *context.Context) {
+					con.Brag.TitleId = recordId
+					con.UpdateFile()
+				},
+				ArgsGenerator: func(args []string, con *context.Context) []any {
+					rtn := []any{con.Process.Company.Id}
+					for _, x := range args {
+						rtn = append(rtn, x)
+					}
+					return rtn
+				},
 			},
 		}
 	} else {

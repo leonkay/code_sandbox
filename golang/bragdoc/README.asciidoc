@@ -18,6 +18,19 @@ achievements.
 Currently, a WIP command line utility, the eventual goal is to provide hooks that can
 tie into a person's daily workflow to ease friction as much as possible when
 tracking these changes.
+== Architectural Design Records
+
+=== 0001: Technical Choices
+
+- Use Golang, *See Technical Goals*
+- Store Activities in a Relational Database
+  * Use sqlite3 as a simple local storage solution
+
+== Data Model
+
+TODO
+
+== Persistent Context
 
 == CLI
 
@@ -29,13 +42,15 @@ Currently, the CLI has the following API:
 
 Here `action` can be
 
-- join
-- leave
+- `join`: Will Affect the persistent context that affects future actions
+- `leave`: Will Affect the persistent context that affects future actions
 - log
 - add
 - remove
 - update
 - switch
+
+TODO
 
 == Motivation
 

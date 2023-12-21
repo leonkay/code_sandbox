@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-const _ActionName = "JoinLeaveLogAddRemoveUpdateSwitch"
+const _ActionName = "SetClearUpdateLogSwitch"
 
-var _ActionIndex = [...]uint8{0, 4, 9, 12, 15, 21, 27, 33}
+var _ActionIndex = [...]uint8{0, 3, 8, 14, 17, 23}
 
-const _ActionLowerName = "joinleavelogaddremoveupdateswitch"
+const _ActionLowerName = "setclearupdatelogswitch"
 
 func (i Action) String() string {
 	i -= 1
@@ -25,42 +25,34 @@ func (i Action) String() string {
 // Re-run the stringer command to generate them again.
 func _ActionNoOp() {
 	var x [1]struct{}
-	_ = x[Join-(1)]
-	_ = x[Leave-(2)]
-	_ = x[Log-(3)]
-	_ = x[Add-(4)]
-	_ = x[Remove-(5)]
-	_ = x[Update-(6)]
-	_ = x[Switch-(7)]
+	_ = x[Set-(1)]
+	_ = x[Clear-(2)]
+	_ = x[Update-(3)]
+	_ = x[Log-(4)]
+	_ = x[Switch-(5)]
 }
 
-var _ActionValues = []Action{Join, Leave, Log, Add, Remove, Update, Switch}
+var _ActionValues = []Action{Set, Clear, Update, Log, Switch}
 
 var _ActionNameToValueMap = map[string]Action{
-	_ActionName[0:4]:        Join,
-	_ActionLowerName[0:4]:   Join,
-	_ActionName[4:9]:        Leave,
-	_ActionLowerName[4:9]:   Leave,
-	_ActionName[9:12]:       Log,
-	_ActionLowerName[9:12]:  Log,
-	_ActionName[12:15]:      Add,
-	_ActionLowerName[12:15]: Add,
-	_ActionName[15:21]:      Remove,
-	_ActionLowerName[15:21]: Remove,
-	_ActionName[21:27]:      Update,
-	_ActionLowerName[21:27]: Update,
-	_ActionName[27:33]:      Switch,
-	_ActionLowerName[27:33]: Switch,
+	_ActionName[0:3]:        Set,
+	_ActionLowerName[0:3]:   Set,
+	_ActionName[3:8]:        Clear,
+	_ActionLowerName[3:8]:   Clear,
+	_ActionName[8:14]:       Update,
+	_ActionLowerName[8:14]:  Update,
+	_ActionName[14:17]:      Log,
+	_ActionLowerName[14:17]: Log,
+	_ActionName[17:23]:      Switch,
+	_ActionLowerName[17:23]: Switch,
 }
 
 var _ActionNames = []string{
-	_ActionName[0:4],
-	_ActionName[4:9],
-	_ActionName[9:12],
-	_ActionName[12:15],
-	_ActionName[15:21],
-	_ActionName[21:27],
-	_ActionName[27:33],
+	_ActionName[0:3],
+	_ActionName[3:8],
+	_ActionName[8:14],
+	_ActionName[14:17],
+	_ActionName[17:23],
 }
 
 // ActionString retrieves an enum value from the enum constants string name.

@@ -20,3 +20,6 @@ INSERT OR IGNORE INTO b_tracker_type (display_tier, context_eligible, activity_k
 INSERT OR IGNORE INTO b_tracker_type (display_tier, context_eligible, activity_key) values (500, FALSE, 'worklog');
 INSERT OR IGNORE INTO b_tracker_type (display_tier, context_eligible, activity_key) values (500, FALSE, 'codecommit');
 INSERT OR IGNORE INTO b_tracker_type (display_tier, context_eligible, activity_key) values (600, FALSE, 'volunteer_activity');
+
+-- INSERT OR IGNORE INTO B_COMPANY (company_name) values ('Default Company');
+-- INSERT OR IGNORE INTO B_TITLE (company_id, title, level) values (1, 'Default Title', 'L1');

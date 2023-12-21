@@ -10,12 +10,10 @@ package model
 type Action int
 
 const (
-	Join Action = iota + 1
-	Leave
-	Log
-	Add
-	Remove
+	Set Action = iota + 1
+	Clear
 	Update
+  Log
   Switch
 )
 

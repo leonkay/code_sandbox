@@ -19,12 +19,14 @@ type Process struct {
 func (p Process) Run(context *context.Context) error {
 	trackerHandler := tracker.TrackerMap()[p.Tracker.Key]
 	if trackerHandler != nil {
-		actionHandler := trackerHandler.New(p.Action, p.Tracker, p.Args)
-		if actionHandler != nil {
-			_, err := actionHandler.Exec(context)
-			if err != nil {
-				log.Fatalln("Could not execute")
-			}
+		actionHandlers := trackerHandler.New(p.Action, p.Tracker, p.Args)
+    if len(actionHandlers) > 0 {
+      for _, actionHandler := range actionHandlers {
+        _, err := actionHandler.Exec(context)
+        if err != nil {
+          log.Fatalln("Could not execute")
+        }
+      }
 		} else {
 			log.Println("No Specific Action Handler for: ", p)
 		}

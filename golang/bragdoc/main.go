@@ -33,6 +33,8 @@ func main() {
 	flag.StringVar(&request.Title, "title", "", "The Title this activity was for")
 	flag.StringVar(&request.Role, "role", "", "The Role this activity was for")
 	flag.StringVar(&request.DateStr, "date", "", "The date this activity occurred on (YYMMDD)")
+  flag.BoolVar(&request.SwitchContext, "switch", false, "If this should change the global context")
+
 	flag.Parse()
 	args := flag.Args()
 

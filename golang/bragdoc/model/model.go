@@ -8,6 +8,7 @@ type RequestContext struct {
 	Title      string
 	Role       string
 	DateStr    string
+  SwitchContext bool
 	Action     string
 	TrackerKey string
 	Args       []string

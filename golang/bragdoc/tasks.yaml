@@ -5,3 +5,7 @@ tasks:
   - name: echo
     commands:
       - echo "{ARGS}"
+  - name: model-generate
+    commands:
+      - cd model
+      - go generate
