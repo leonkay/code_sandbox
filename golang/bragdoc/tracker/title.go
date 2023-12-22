@@ -11,10 +11,10 @@ type TitleTrackerHandler struct {
 func (c TitleTrackerHandler) New(action model.Action, trackerType model.TrackerType, args []string) []ActionTask {
 	if action == model.Set {
 		return []ActionTask{
-			UpdateActionHandler{
+			CreateActionTask{
 				Action:       action,
 				SqlFile:      "sql/title.sql",
-				StatementKey: "insert:title",
+				CreateSqlKey: "insert:title",
 				CliArgs:      args,
 				ContextUpdate: func(recordId int, con *context.Context) {
 					con.Brag.TitleId = recordId
@@ -31,11 +31,11 @@ func (c TitleTrackerHandler) New(action model.Action, trackerType model.TrackerT
 		}
 	} else if action == model.Switch {
 		return []ActionTask{
-			QueryActionHandler{
-				Action:       action,
-				SqlFile:      "sql/search.sql",
-				StatementKey: "title:byname:selectid",
-				CliArgs:      args,
+			QueryActionTask{
+				Action:      action,
+				SqlFile:     "sql/search.sql",
+				QuerySqlKey: "title:byname:selectid",
+				CliArgs:     args,
 				ContextUpdate: func(recordId int, con *context.Context) {
 					con.Brag.TitleId = recordId
 					con.UpdateFile()

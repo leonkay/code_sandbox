@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"errors"
 	"log"
 	"strings"
 
@@ -16,17 +17,30 @@ type Process struct {
 	Args    []string
 }
 
+func (p Process) Validate(context *context.Context) error {
+	log.Println("ProcessContext: ", context.Process)
+	log.Println("\tprocess: ", p)
+  companyTask :=  p.Tracker.Key == "company"
+	if context.Process.Company == nil && !companyTask {
+		return errors.New("Please run `-switch=true set company <company name>' first")
+	}
+	if !companyTask && context.Process.Title == nil && p.Tracker.Key != "title" {
+		return errors.New("Please run `-switch=true set title <title> <level>' first")
+	}
+	return nil
+}
+
 func (p Process) Run(context *context.Context) error {
 	trackerHandler := tracker.TrackerMap()[p.Tracker.Key]
 	if trackerHandler != nil {
 		actionHandlers := trackerHandler.New(p.Action, p.Tracker, p.Args)
-    if len(actionHandlers) > 0 {
-      for _, actionHandler := range actionHandlers {
-        _, err := actionHandler.Exec(context)
-        if err != nil {
-          log.Fatalln("Could not execute")
-        }
-      }
+		if len(actionHandlers) > 0 {
+			for _, actionHandler := range actionHandlers {
+				_, err := actionHandler.Exec(context)
+				if err != nil {
+					log.Fatalln("Could not execute")
+				}
+			}
 		} else {
 			log.Println("No Specific Action Handler for: ", p)
 		}
@@ -53,8 +67,6 @@ func (e Engine) Exec() {
 
 	args := req.Args
 
-	var err error
-
 	actionStr := req.Action
 	trackerKey := req.TrackerKey
 
@@ -77,5 +89,9 @@ func (e Engine) Exec() {
 		Tracker: tracker,
 	}
 
-	process.Run(e.Context)
+	if err := process.Validate(e.Context); err == nil {
+		process.Run(e.Context)
+	} else {
+		log.Fatalln("Process Validate Error: ", err)
+	}
 }

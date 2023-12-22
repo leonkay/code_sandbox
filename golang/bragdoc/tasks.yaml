@@ -2,6 +2,9 @@ tasks:
   - name: test
     commands:
       - go test ./...
+  - name: build
+    commands:
+      - go build -o dist/bragdoc
   - name: echo
     commands:
       - echo "{ARGS}"
@@ -9,3 +12,7 @@ tasks:
     commands:
       - cd model
       - go generate
+  - name: initialize
+    commands:
+      - dist/bragdoc -switch=true set company {ARGS[0]}
+      - dist/bragdoc -switch=true set title {ARGS[1]} {ARGS[2]}

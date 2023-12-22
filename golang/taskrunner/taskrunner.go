@@ -4,21 +4,22 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
 	"slices"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
 
 // used to output additional console logging for debugging
 var verbose = false
+
 // used to block command execution of the associated task.
 var silentMode = false
 
 type Task struct {
-	Name    string `yaml:"name"`
+	Name     string   `yaml:"name"`
 	Commands []string `yaml:"commands"`
-	Args []string `yaml:"args"`
+	Args     []string `yaml:"args"`
 }
 
 type TaskList struct {
@@ -66,24 +67,30 @@ func loadTasks(file string) (TaskList, error) {
  * @param args - an array of arguments to used when building out the command line command
  * @returns string - The generated command line command to be executed
  */
-func buildTask(task Task, args ...string) string {
-	baseCmd := strings.Join(task.Commands, " && ")
+func buildTask(task Task, args ...string) []string {
+	baseCmds := task.Commands
+
 	argsStr := strings.Join(args, " ")
-	prep := strings.ReplaceAll(baseCmd, "{ARGS}", argsStr)
 
-	// replace with command line arguments
-	for index, arg := range args {
-		prep = strings.ReplaceAll(prep, fmt.Sprintf("{ARGS[%d]}", index), arg)
-	}
+	rtn := []string{}
 
-	// replace with default args on the task
-	for index, arg := range task.Args {
-		prep = strings.ReplaceAll(prep, fmt.Sprintf("{ARGS[%d]}", index), arg)
+	for _, cmd := range baseCmds {
+		prep := strings.ReplaceAll(cmd, "{ARGS}", argsStr)
+		// replace with command line arguments
+		for index, arg := range args {
+			prep = strings.ReplaceAll(prep, fmt.Sprintf("{ARGS[%d]}", index), arg)
+		}
+
+		// replace with default args on the task
+		for index, arg := range task.Args {
+			prep = strings.ReplaceAll(prep, fmt.Sprintf("{ARGS[%d]}", index), arg)
+		}
+		if verbose {
+			fmt.Printf("-- Command: '%s'\n", prep)
+		}
+		rtn = append(rtn, prep)
 	}
-	if verbose {
-		fmt.Printf("-- Command: '%s'\n", prep)
-	}
-	return prep
+	return rtn
 }
 
 /**
@@ -106,17 +113,17 @@ func runTask(command string) error {
  *			Note these options must come before the task name to be associated with taskrunner
  * @return args - a string array of arguments that will be used in the command line command generation.
  */
-func findTask(args ...string)(string, []string, []string) {
+func findTask(args ...string) (string, []string, []string) {
 	task := args[0]
 	rtnIndex := 1
 	for index, arg := range args {
 		if !strings.HasPrefix(arg, "-") {
 			task = arg
 			rtnIndex = index
-			break;
+			break
 		}
 	}
-	return task, args[0:rtnIndex], args[rtnIndex + 1:]
+	return task, args[0:rtnIndex], args[rtnIndex+1:]
 }
 
 /**
@@ -145,7 +152,7 @@ func main() {
 	}
 
 	// combine default tasks with the tasks found in tasks.yml
-	tasks := TaskList {
+	tasks := TaskList{
 		Tasks: append(defTasks.Tasks, fileTasks.Tasks...),
 	}
 
@@ -167,21 +174,23 @@ func main() {
 	}
 
 	// Iterate through the task list, searching for an exact match
-	// and execute it if found. 
+	// and execute it if found.
 	for _, task := range tasks.Tasks {
 		if task.Name == taskName {
 			fmt.Printf("Running task: %s\n", task.Name)
 			if verbose {
 				fmt.Printf("-- with args: %s\n", taskArgs)
 			}
-			taskCommand := buildTask(task, taskArgs...)
+			taskCommands := buildTask(task, taskArgs...)
 			if !silentMode {
-				err := runTask(taskCommand)
-				if err != nil {
-					fmt.Println("Error running task:", err)
-					os.Exit(1)
+				for _, taskCommand := range taskCommands {
+					err := runTask(taskCommand)
+					if err != nil {
+						fmt.Println("Error running task:", err)
+						os.Exit(1)
+					}
+					return
 				}
-				return
 			} else {
 				fmt.Println("not executed")
 				os.Exit(1)

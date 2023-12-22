@@ -44,14 +44,10 @@ func (c *Context) Init() {
 	}
 
 	company := initCompany(c.Request, c.Brag, c.Handler)
-  if company == nil {
-    if c.Request.TrackerKey != "company" {
-      log.Fatalln("Could not determine company")
-      return
-    }
-
+  var title *model.Title = nil
+  if company != nil {
+    title = initTitle(c.Request, c.Brag, company, c.Handler)
   }
-  title := initTitle(c.Request, c.Brag, company, c.Handler)
 	c.Process = &model.ProcessContext{
 		Company: company,
 		Title:   title,

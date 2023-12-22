@@ -11,13 +11,13 @@ type SalaryTrackerHandler struct {
 }
 
 func salaryArgGenerator(args []string, con *context.Context) []any {
-  log.Println(args, con)
+	log.Println(args, con)
 	rtn := []any{}
-  if con.Process.Title != nil {
-    rtn = append(rtn, con.Process.Title.Id)
-  } else {
-    rtn = append(rtn, "")
-  }
+	if con.Process.Title != nil {
+		rtn = append(rtn, con.Process.Title.Id)
+	} else {
+		rtn = append(rtn, "")
+	}
 	for _, x := range args {
 		rtn = append(rtn, x)
 	}
@@ -27,10 +27,10 @@ func salaryArgGenerator(args []string, con *context.Context) []any {
 func (c SalaryTrackerHandler) New(action model.Action, trackerType model.TrackerType, args []string) []ActionTask {
 	if action == model.Set {
 		return []ActionTask{
-			UpdateActionHandler{
+			CreateActionTask{
 				Action:        action,
 				SqlFile:       "sql/salary.sql",
-				StatementKey:  "insert",
+				CreateSqlKey:  "insert",
 				CliArgs:       args,
 				ArgsGenerator: salaryArgGenerator,
 			},

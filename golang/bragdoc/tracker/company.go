@@ -13,10 +13,11 @@ type CompanyTrackerHandler struct {
 func (c CompanyTrackerHandler) New(action model.Action, trackerType model.TrackerType, args []string) []ActionTask {
 	if action == model.Set {
 		return []ActionTask{
-			UpdateActionHandler{
+			CreateActionTask{
 				Action:       action,
 				SqlFile:      "sql/company.sql",
-				StatementKey: "insert:company",
+        QuerySqlKey: "select:company",
+				CreateSqlKey: "insert:company",
 				CliArgs:      args,
 				ContextUpdate: func(recordId int, con *context.Context) {
 					con.Brag.CompanyId = recordId
@@ -29,11 +30,11 @@ func (c CompanyTrackerHandler) New(action model.Action, trackerType model.Tracke
 		}
 	} else if action == model.Switch {
 		return []ActionTask{
-			QueryActionHandler{
-				Action:       action,
-				SqlFile:      "sql/company.sql",
-				StatementKey: "select:company",
-				CliArgs:      args,
+			QueryActionTask{
+				Action:      action,
+				SqlFile:     "sql/company.sql",
+				QuerySqlKey: "select:company",
+				CliArgs:     args,
 				ContextUpdate: func(recordId int, con *context.Context) {
 					con.Brag.CompanyId = recordId
 					con.UpdateFile()
@@ -45,11 +46,11 @@ func (c CompanyTrackerHandler) New(action model.Action, trackerType model.Tracke
 		}
 	} else if action == model.Clear {
 		return []ActionTask{
-			QueryActionHandler{
-				Action:       action,
-				SqlFile:      "sql/company.sql",
-				StatementKey: "select:company",
-				CliArgs:      args,
+			QueryActionTask{
+				Action:      action,
+				SqlFile:     "sql/company.sql",
+				QuerySqlKey: "select:company",
+				CliArgs:     args,
 				ContextUpdate: func(recordId int, con *context.Context) {
 					con.Brag.CompanyId = recordId
 					con.UpdateFile()
